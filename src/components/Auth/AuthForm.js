@@ -7,55 +7,83 @@ const AuthForm = () => {
   const enteredEmail = useRef();
   const enteredPassword = useRef();
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
 
-const formSubmit = async (e) => {
-  e.preventDefault();
+  const formSubmit = async (e) => {
+    e.preventDefault();
 
-  const emailData = enteredEmail.current.value;
-  const passwordData = enteredPassword.current.value;
-  setIsLoading(true);
+    const emailData = enteredEmail.current.value;
+    const passwordData = enteredPassword.current.value;
+    setIsLoading(true);
 
-  if (isLogin) {
-    // Code for login
-  } else {
-    try {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDC7d3qLUkkIlrKFfWsQrqn1Xl-9uxeQFc",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: emailData,
-            password: passwordData,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (isLogin) {
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDC7d3qLUkkIlrKFfWsQrqn1Xl-9uxeQFc",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: emailData,
+              password: passwordData,
+              returnSecureToken: true,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if(response.ok){
+          setIsLoading(false)
+          const data = await response.json()
+          console.log(data.idToken)
+        }else{
+          setIsLoading(false)
+           let alertMessage = 'Authentication Failed'
+          alert(alertMessage)
         }
-      );
-
-      if (response.ok) {
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        const data = await response.json();
-        let alertMessage = "Authentication Failed";
-        if (data && data.error && data.error.message) {
-          alertMessage = data.error.message;
-        }
-        alert(alertMessage);
+      } catch(error) {
+        setIsLoading(false)
+        console.log(error)
       }
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
+    } else {
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDC7d3qLUkkIlrKFfWsQrqn1Xl-9uxeQFc",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: emailData,
+              password: passwordData,
+              returnSecureToken: true,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          setIsLoading(false);
+          alert('Account Created')
+        } else {
+          setIsLoading(false);
+          const data = await response.json();
+          let alertMessage = "Authentication Failed";
+          if (data && data.error && data.error.message) {
+            alertMessage = data.error.message;
+          }
+          alert(alertMessage);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+      }
     }
-  }
-};
+  };
 
   return (
     <section className={classes.auth}>
@@ -70,7 +98,11 @@ const formSubmit = async (e) => {
           <input type="password" id="password" required ref={enteredPassword} />
         </div>
         <div className={classes.actions}>
-          {!isLoading && <button type="submit">{isLogin ? "Log In" : "Create Account"}</button>}
+          {!isLoading && (
+            <button type="submit">
+              {isLogin ? "Log In" : "Create Account"}
+            </button>
+          )}
           {isLoading && <button>Sending Response ....</button>}
           <button
             type="button"
