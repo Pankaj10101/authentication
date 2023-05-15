@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import classes from "./MainNavigation.module.css";
 import { useContext } from "react";
@@ -6,19 +6,15 @@ import { AuthContext } from "../../store/Context";
 
 const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const isLoggenIn = authCtx.isLoggenIn;
 
-  // const [login, setLogin] = useState(false)
-  // const loginId = localStorage.getItem('loginId')
-  // useEffect(()=>{
-  //   if(loginId){
-  //     setLogin(true)
-  //   }else{
-  //     setLogin(false)
-  //   }
-  // }, [])
 
+  const handleLogout = ()=>{
+    authCtx.logout()
+    navigate('/auth')
+  }
 
   return (
     <header className={classes.header}>
@@ -34,7 +30,7 @@ const MainNavigation = () => {
           )}
           {isLoggenIn && <li>{<Link to="/profile">Profile</Link>}</li>}
           {isLoggenIn && (
-            <li>{<button onClick={authCtx.logout}>Logout</button>}</li>
+            <li>{<button onClick={handleLogout}>Logout</button>}</li>
           )}
         </ul>
       </nav>
