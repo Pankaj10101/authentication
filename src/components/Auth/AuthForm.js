@@ -1,9 +1,10 @@
 import { useState, useRef, useContext } from "react";
-
+import {useNavigate} from 'react-router'
 import classes from "./AuthForm.module.css";
 import { AuthContext } from "../../store/Context";
 
 const AuthForm = () => {
+  const history = useNavigate()
   const [isLogin, setIsLogin] = useState(true);
   const enteredEmail = useRef();
   const enteredPassword = useRef();
@@ -43,6 +44,7 @@ const AuthForm = () => {
           setIsLoading(false)
           const data = await response.json()
           authCtx.login(data.idToken)
+          history('/')
           // localStorage.setItem("loginId", data.idToken)
         }else{
           setIsLoading(false)

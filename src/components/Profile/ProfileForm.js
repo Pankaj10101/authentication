@@ -1,9 +1,11 @@
 import { useContext, useRef } from "react";
 import classes from "./ProfileForm.module.css";
 import { AuthContext } from "../../store/Context";
+import { useNavigate } from "react-router-dom";
 
 const ProfileForm = () => {
   const newPassword = useRef();
+  const navigate = useNavigate()
 
   const authctx = useContext(AuthContext)
   const submitHandler = (e) => {
@@ -24,7 +26,7 @@ const ProfileForm = () => {
       }
     ).then((res)=>{
       if(res.ok){
-
+        navigate('/')
         console.log("passwordChanged")
       }
     })
