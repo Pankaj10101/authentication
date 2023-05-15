@@ -12,13 +12,31 @@ export const AuthContext= createContext ({
 const Context = ({children})=>{
 
     const [token, setToken] = useState(null)
+    const [loginTime, setLoginTime] = useState(null)
     const userIsLoggedIn = !!token
 
     useEffect(()=>{
-        loginHandler(localStorage.getItem('loginId'))
+        const storedToken = localStorage.getItem('token')
+        const storedTime = localStorage.getItem('loginTime')
+
+        if(storedTime && storedToken) {
+            const currTime = Date.now();
+            const timePassed = currTime - parseInt(storedTime)
+            const minutePassed = timePassed/(1000*60)
+            if(minutePassed<5){
+                setToken(storedToken)
+                setLoginTime(storedTime)
+            }else{
+                logoutHandler()
+            }
+        }
+
+
     }, [])
     const loginHandler = (token)=>{
         setToken(token)
+        localStorage.setItem("token", token);
+        localStorage.setItem("loginTime", Date.now().toString());
     }
     const logoutHandler = ()=>{
         setToken(null)
