@@ -13,6 +13,7 @@ const MainNavigation = () => {
 
   const handleLogout = ()=>{
     authCtx.logout()
+    localStorage.removeItem('loginId')
     navigate('/auth')
   }
 

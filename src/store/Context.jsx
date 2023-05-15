@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const AuthContext= createContext ({
     token : '',
@@ -13,6 +13,10 @@ const Context = ({children})=>{
 
     const [token, setToken] = useState(null)
     const userIsLoggedIn = !!token
+
+    useEffect(()=>{
+        loginHandler(localStorage.getItem('loginId'))
+    }, [])
     const loginHandler = (token)=>{
         setToken(token)
     }

@@ -45,7 +45,7 @@ const AuthForm = () => {
           const data = await response.json()
           authCtx.login(data.idToken)
           history('/')
-          // localStorage.setItem("loginId", data.idToken)
+          localStorage.setItem("loginId", data.idToken)
         }else{
           setIsLoading(false)
            let alertMessage = 'Authentication Failed'
